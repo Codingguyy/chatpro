@@ -1,2 +1,10 @@
+"use client"
 import {useEffect} from 'react'
-import {Router} from 'next/router'
+import {useRouter} from 'next/navigation'
+export default function Pagee(){
+  const router=useRouter()
+  useEffect(()=>{
+    router.push("/login")
+  },[])
+  return(<></>)
+}
