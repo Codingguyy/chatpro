@@ -1,5 +1,5 @@
 import Chatdashboard from '@/components/chat'
-import Floatingbar from '@/components/floatingbar'
+import Floatingnavbar from '@/components/floatingnavbar'
 export default async function Layout({children}:Readonly<{children:React.ReactNode}>){
     return(
         <div className="relative max-w-9xl flex flex-col items-center justify-start no-scrollbar bg-[#0a0a0a]" style={{fontFamily:"'Robotomono',monospace"}}>
