@@ -1475,7 +1475,7 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         const {event,payload}=JSON.parse(data.toString())
         if(event==="login:request"){
             const {token,email}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify){
                 handleregister(verify.name,email,verify._id,socket)
                 userlist.get(verify._id)?.forEach((value)=>{
@@ -1489,7 +1489,7 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         }
         if(event==="register:request"){
             const {token,name,email,_id}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify){
                 console.log(verify)
                 handleregister(name,email,_id,socket)
@@ -1506,7 +1506,7 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         }
         if(event==="search:request"){
             const {token,search}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 console.log(search,verify._id,verify.name)
                 handlesearchrequest(search,verify.name,verify?._id)
@@ -1514,7 +1514,7 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         }
         if(event==="request:onetooneconversation"){
             const {senderId,recieverId,token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 if(oneto1conversationrequest.get(getkey(senderId,recieverId))?.status!=="accepted"){
                     console.log("request condition passed",senderId,recieverId)
@@ -1524,7 +1524,7 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         }
         if(event==="request:accepted:onetooneconversation"){
             const {senderId,recieverId,token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             console.log(senderId,recieverId,verify,token,oneto1conversationrequest.get(getkey(senderId,recieverId)))
             if(verify.name&&verify._id){
                 if(oneto1conversationrequest.get(getkey(senderId,recieverId))?.status!=="accepted"&&oneto1conversationrequest.get(getkey(senderId,recieverId))){
@@ -1535,7 +1535,7 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         }
         if(event==="request:rejected:onetooneconversation"){
             const {senderId,recieverId,token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 if(oneto1conversationrequest.get(getkey(senderId,recieverId))?.status!=="accepted"&&oneto1conversationrequest.get(getkey(senderId,recieverId))?.status!=="deleted"&&oneto1conversationrequest.get(getkey(senderId,recieverId))?.status){
                     handleonetooneconversationrequestrejected(senderId,recieverId)
@@ -1544,7 +1544,7 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         }
         if(event==="message:sent:onetooneconversation"){
             const {senderId,recieverId,message,createdAt,token,status,replyto,attachment}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 if(oneto1conversationmessages.has(getkey(senderId,recieverId))&&oneto1conversationrequest.get(getkey(senderId,recieverId))?.status==="accepted"&&oneto1conversations.has(getkey(senderId,recieverId))){
                     console.log("condi passed")
@@ -1554,7 +1554,7 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         }
         if(event==="message:deleted:onetooneconversation"){
             const {senderId,recieverId,message,createdAt,token,status,messagesenderId,globalId}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 if(oneto1conversationmessages.has(getkey(senderId,recieverId))&&oneto1conversationrequest.get(getkey(senderId,recieverId))?.status==="accepted"&&oneto1conversations.has(getkey(senderId,recieverId))&&messagesenderId===verify._id){
                     console.log("message deleted")
@@ -1564,7 +1564,7 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         }
         if(event==="message:view:onetooneconversation"){
             const {senderId,recieverId,global_id,token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 if(oneto1conversationmessages.has(getkey(senderId,recieverId))&&oneto1conversationrequest.get(getkey(senderId,recieverId))?.status==="accepted"&&oneto1conversations.has(getkey(senderId,recieverId))){
                     handleonetooneconversationviewmessages(senderId,recieverId,verify._id,global_id,"view")
@@ -1573,7 +1573,7 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         }
         if(event==="request:conversations:onetooneconversations"){
             const {senderId,token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 console.log(senderId,verify)
                 handleonetooneconversationdetails(senderId,verify._id,verify._id)
@@ -1581,7 +1581,7 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         }
         if(event==="message:typing:onetooneconversation"){
             const {senderId,recieverId,token,typing}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 console.log("typing request",verify)
                 handletypingonetooneconversation(senderId,recieverId,verify._id,typing)
@@ -1589,7 +1589,7 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         }
         if(event==="message:loadmore:onetooneconversations"){
             const {senderId,recieverId,token,cursor_id}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify._id&&verify.name){
                 console.log("load more request came")
                 handleloadmoreonetooneconversations(senderId,recieverId,verify._id,cursor_id)
@@ -1597,56 +1597,56 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         }
         if(event==="request:conversation:leave"){
             const {token,senderId,recieverId}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handleleaveonetooneconversation(verify._id,senderId,recieverId)
             }
         }
         if(event==="message:deleteforme:onetooneconversation"){
             const {senderId,recieverId,status,messageid,userid,token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify._id&&verify.name&&userid===verify._id){
                 handledeleteformeonetooneconversation(senderId,recieverId,status,messageid,verify._id)
             }
         }
         if(event==="request:namechange:onetooneconversation"){
             const {token,name}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlechangenameonetooneconversation(verify._id,name)
             }
         }
         if(event==="request:descriptionchange:onetooneconversation"){
             const {token,description}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify._id&&verify.name){
                 handlechangedescriptiononetooneconversation(description,verify._id)
             }
         }
         if(event==="request:online:onetooneconversation"){
             const {token,id}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify._id&&verify.name&&id){
                 handleloginonetooneconversation(verify._id,id)
             }
         }
         if(event==="request:userexist"){
             const {token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify._id&&verify.name){
                 handleexistusers(verify._id)
             }
         }
         if(event==="message:sent:edit:onetooneconversation"){
             const {token,global_id,message,senderId,recieverId}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handleeditmessageonetooneconversation(global_id,message,senderId,recieverId,verify._id)
             }
         }
         if(event==="request:creategroup"){
             const {token,name,description}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 console.log("server event triggered")
                 handlecreategroup(name,description,verify._id,verify.name)
@@ -1654,21 +1654,21 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         }
         if(event==="request:groups:search"){
             const {token,search}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlesearchgrouprequest(search,verify._id)
             }
         }
         if(event==="request:statuschange:group"){
             const {groupId,status,token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegroupstatuschange(groupId,status,verify._id)
             }
         }
         if(event==="request:sendgrouprequest:group"){
             const {groupId,status,token,type}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 console.log("request event in server")
                 handlegroupsendrequest(groupId,status,verify._id,verify.name,type)
@@ -1676,7 +1676,7 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         }
         if(event==="request:grouprequestaccept:group"){
             const {groupId,sendBy,token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 console.log("group request accept")
                 handlegrouprequestaccept(groupId,verify.name,verify._id,sendBy)
@@ -1684,35 +1684,35 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         }
         if(event==="request:sendgroupinviterequest:group"){
             const {groupId,sendTo,token,status,type}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegroupinvitesend(groupId,sendTo,status,type,verify._id,verify.name)
             }
         }
         if(event==="request:groupinviteaccept:group"){
             const {groupId,sendBy,token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegroupinviteaccept(groupId,sendBy,verify._id,verify.name)
             }
         }
         if(event==="request:groupconversations:group"){
             const {groupId,token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegroupconversation(verify._id,verify.name,groupId)
             }
         }
         if(event==="request:sendmessage:group"){
             const {groupId,token,message,reply,attachment}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegroupsendmessage(groupId,message,verify._id,verify.name,reply,attachment)
             }
         }
         if(event==="request:viewmessage:group"){
             const {groupId,globalId,sendBy,token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             console.log(event)
             if(verify.name&&verify._id){
                 console.log("server event triggered")
@@ -1721,154 +1721,154 @@ function handleonetooneconversationrequestrejected(senderId:string,recieverId:st
         }
         if(event==="request:changememberstatus:group"){
             const {groupId,promoteId,token,status}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlechangememberstatus(groupId,promoteId,status,verify._id)
             }
         }
         if(event==="request:groupleave:group"){
             const {groupId,token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handleleavegroup(groupId,verify._id)
             }
         }
         if(event==="request:grouptyping:group"){
             const {groupId,token,status}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegrouptyping(groupId,verify._id,verify.name,status)
             }
         }
         if(event==="request:groupname:group"){
             const {token,groupId,name}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegroupchangename(groupId,name,verify._id)
             }
         }
         if(event==="request:groupdescription:group"){
             const {token,groupId,description}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegroupchangedescription(groupId,verify._id,description)
             }
         }
         if(event==="request:pagimoremessage:group"){
             const {token,groupId,id}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegrouppagination(groupId,id,verify._id)
             }
         }
         if(event==="request:replymessage:group"){
             const {token,globalId,message,groupId,replymessage}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlereplygroupmessage(globalId,message,token._id,token.name,groupId,replymessage)
             }
         }
         if(event==="request:grouprecieverejectrequest:group"){
             const {groupId,sendBy,token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegrouprecieverejectrequest(groupId,sendBy,verify._id)
             }
         }
         if(event==="request:groupsenderrequestcancel:group"){
             const {groupId,status,type,token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegroupsenderrequestcancel(groupId,status,type,verify._id)
             }
         }
         if(event==="request:grouptypingonline:group"){
             const {groupId,token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegrouptypingonline(groupId,verify._id,verify.name,true)
             }
         }
         if(event==="request:messagestatuschange:group"){
             const {groupId,messageId,token,status}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegroupmessagestatuschange(groupId,messageId,verify._id,status)
             }
         }
         if(event==="request:editmessage:group"){
             const {groupId,globalId,token,message}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegroupmessageedit(groupId,globalId,verify._id,message)
             }
         }
         if(event==="request:grouptypingonlinetyping:group"){
             const {groupId,token,status}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,"JWT_JWT_SECRET") as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegrouptypingonlinetyping(groupId,verify._id,status)
             }
         }
         if(event==="request:memberstatus:group"){
             const {memberId,token,status,groupId}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,"JWT_JWT_SECRET") as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlechangegroupmemberstatus(memberId,status,verify._id,groupId)
             }
         }
         if(event==="request:block:group"){
             const {memberId,token,groupId,action}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegroupblockmember(memberId,verify._id,groupId,action)
             }
         }
         if(event==="request:kickmember:group"){
             const {memberId,token,groupId}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlekickmember(groupId,memberId,verify._id)
             }
         }
         if(event==="request:groupsettings:group"){
             const {Settings,value,token,groupId}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlegroupsettingschange(Settings,value,verify._id,groupId)
             }
         }
         if(event==="request:reload:groupexistlist:group"){
             const {token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as{name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as{name:string,_id:string}
             if(verify.name&&verify._id){
                 handlereloadgroupexistlist(verify.name,verify._id)
             }
         }
         if(event==="request:reload:grouprequestrecieve:group"){
             const {token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlereloadgrouprequestrecieve(verify._id)
             }
         }
         if(event==="request:reload:grouprequestsend:group"){
             const {token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlereloadgrouprequestsend(verify._id)
             }
         }
         if(event==="request:reload:onetooneconversationrequests:onetooneconversation"){
             const {token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlereloadonetooneconversationrequests(verify._id)
             }
         }
         if(event==="request:reload:conversation:onetooneconversation"){
             const {token}=payload
-            const verify=jsonwebtoken.verify(token,"secret") as {name:string,_id:string}
+            const verify=jsonwebtoken.verify(token,JWT_SECRET) as {name:string,_id:string}
             if(verify.name&&verify._id){
                 handlereloadconversationonetooneconversations(verify._id)
             }
